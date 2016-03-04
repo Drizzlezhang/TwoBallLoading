@@ -15,12 +15,19 @@
 		android:layout_centerInParent="true"
 		android:padding="10dp"
 		android:id="@+id/loading_view"
-		app:loading_back="@color/colorAccent"
+		app:loading_back="@color/colorPrimary"
 		/>
 	<Button
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:id="@+id/button"
-		android:text="button"
+		android:text="start"
+		/>
+	<Button
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:id="@+id/stop"
+		android:text="stop"
 		/>
 </RelativeLayout>

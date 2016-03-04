@@ -45,6 +45,8 @@ public class TwoBallLoadingView extends View {
 	private int mergeProgress = 0;
 	private int finishProgress = 0;
 
+	private boolean ISANIM = false;
+
 	final LoadingAnimation mLoadingAnimation = new LoadingAnimation(this);
 	final LoadingAnimation mLoadingAnimationRepeat = new LoadingAnimation(this);
 
@@ -63,6 +65,7 @@ public class TwoBallLoadingView extends View {
 		mBackColor = array.getColor(R.styleable.TwoBallLoadingView_loading_back, Color.BLUE);
 		array.recycle();
 		initPaint();
+		initAnimation();
 		mDefaultRadius = DensityUtils.dip2px(context, 40);
 	}
 
@@ -111,13 +114,7 @@ public class TwoBallLoadingView extends View {
 				drawBornBall(canvas, splitProgress);
 				break;
 			case LOADING_ROTATE:
-				canvas.rotate(rotateProgress * 180 / 100,
-					(getMeasuredWidth() + getPaddingLeft() - getPaddingRight()) / 2,
-					(getMeasuredHeight() + getPaddingTop() - getPaddingBottom()) / 2);
-				canvas.drawCircle(getPaddingLeft() + mChildBallRadius,
-					(getMeasuredHeight() + getPaddingTop() - getPaddingBottom()) / 2, mChildBallRadius, mPaint);
-				canvas.drawCircle(getMeasuredWidth() - getPaddingRight() - mChildBallRadius,
-					(getMeasuredHeight() + getPaddingTop() - getPaddingBottom()) / 2, mChildBallRadius, mPaint);
+				drawRotate(canvas, rotateProgress);
 				break;
 			case LOADING_MERGE:
 				drawBornBall(canvas, 100 - mergeProgress);
@@ -130,12 +127,18 @@ public class TwoBallLoadingView extends View {
 		}
 	}
 
+	/**
+	 * 画大球
+	 */
 	private void drawParentBall(Canvas canvas, int progress) {
 		canvas.drawCircle((getMeasuredWidth() + getPaddingLeft() - getPaddingRight()) / 2,
 			(getMeasuredHeight() + getPaddingTop() - getPaddingBottom()) / 2, progress * mParentBallRadius / 100,
 			mPaint);
 	}
 
+	/**
+	 * 画小球
+	 */
 	private void drawBornBall(Canvas canvas, int progress) {
 		int leftCenterX = (getMeasuredWidth() + getPaddingLeft() - getPaddingRight()) / 2
 			- ((getMeasuredWidth() - getPaddingLeft() - getPaddingRight()) / 2 - mChildBallRadius) * progress / 100;
@@ -145,6 +148,18 @@ public class TwoBallLoadingView extends View {
 		int changingRadius = mParentBallRadius - (mParentBallRadius - mChildBallRadius) * progress / 100;
 		canvas.drawCircle(leftCenterX, centerY, changingRadius, mPaint);
 		canvas.drawCircle(rightCenterX, centerY, changingRadius, mPaint);
+	}
+
+	/**
+	 * 旋转动画
+	 */
+	private void drawRotate(Canvas canvas, int progress) {
+		canvas.rotate(progress * 180 / 100, (getMeasuredWidth() + getPaddingLeft() - getPaddingRight()) / 2,
+			(getMeasuredHeight() + getPaddingTop() - getPaddingBottom()) / 2);
+		canvas.drawCircle(getPaddingLeft() + mChildBallRadius,
+			(getMeasuredHeight() + getPaddingTop() - getPaddingBottom()) / 2, mChildBallRadius, mPaint);
+		canvas.drawCircle(getMeasuredWidth() - getPaddingRight() - mChildBallRadius,
+			(getMeasuredHeight() + getPaddingTop() - getPaddingBottom()) / 2, mChildBallRadius, mPaint);
 	}
 
 	private void setProgress(int progress) {
@@ -169,12 +184,12 @@ public class TwoBallLoadingView extends View {
 		}
 	}
 
-	public void startLoading() {
+	private void initAnimation() {
 		mLoadingAnimation.setDuration(500);
 		mLoadingAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
 		mLoadingAnimationRepeat.setDuration(500);
 		mLoadingAnimationRepeat.setInterpolator(new AccelerateDecelerateInterpolator());
-		mLoadingAnimationRepeat.setRepeatCount(5);
+		mLoadingAnimationRepeat.setRepeatCount(10000);
 		mLoadingAnimationRepeat.setAnimationListener(new Animation.AnimationListener() {
 			@Override public void onAnimationStart(Animation animation) {
 
@@ -187,7 +202,9 @@ public class TwoBallLoadingView extends View {
 			}
 
 			@Override public void onAnimationRepeat(Animation animation) {
-
+				if (!ISANIM) {
+					TwoBallLoadingView.this.clearAnimation();
+				}
 			}
 		});
 		mLoadingAnimation.setAnimationListener(new Animation.AnimationListener() {
@@ -219,6 +236,7 @@ public class TwoBallLoadingView extends View {
 						LOADING_STATE = LOADING_START;
 						TwoBallLoadingView.this.clearAnimation();
 						finishProgress = 0;
+						ISANIM = false;
 						break;
 					default:
 						break;
@@ -226,13 +244,26 @@ public class TwoBallLoadingView extends View {
 			}
 
 			@Override public void onAnimationRepeat(Animation animation) {
+
 			}
 		});
-		this.startAnimation(mLoadingAnimation);
+	}
+
+	public void startLoading() {
+		if (ISANIM) {
+			return;
+		} else {
+			ISANIM = true;
+			this.startAnimation(mLoadingAnimation);
+		}
 	}
 
 	public void stop() {
-
+		if (ISANIM) {
+			ISANIM = false;
+		} else {
+			return;
+		}
 	}
 
 	private class LoadingAnimation extends Animation {
