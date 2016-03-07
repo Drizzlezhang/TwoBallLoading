@@ -4,6 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+import com.drizzle.loadingview.OnLoadingListener;
 import com.drizzle.loadingview.TwoBallLoadingView;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,7 +26,16 @@ public class MainActivity extends AppCompatActivity {
 		stopButton=(Button)findViewById(R.id.stop);
 		stopButton.setOnClickListener(new View.OnClickListener() {
 			@Override public void onClick(View v) {
-				mTwoBallLoadingView.stop();
+				mTwoBallLoadingView.stop(false);
+			}
+		});
+		mTwoBallLoadingView.setOnLoadingListener(new OnLoadingListener() {
+			@Override public void onLoadingStart() {
+				Toast.makeText(MainActivity.this,"start",Toast.LENGTH_SHORT).show();
+			}
+
+			@Override public void onLoadingEnd() {
+				Toast.makeText(MainActivity.this,"end",Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
