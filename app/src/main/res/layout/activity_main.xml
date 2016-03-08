@@ -18,17 +18,31 @@
 		android:background="@color/colorAccent"
 		app:loading_back="@color/colorPrimary"
 		/>
-	<Button
-		android:layout_width="wrap_content"
+	<LinearLayout
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:id="@+id/button"
-		android:text="start"
-		/>
-	<Button
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentRight="true"
-		android:id="@+id/stop"
-		android:text="stop"
-		/>
+		android:orientation="horizontal"
+		>
+		<Button
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/start"
+			android:text="start"
+			/>
+		<Button
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:id="@+id/success"
+			android:text="success"
+			/>
+		<Button
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:id="@+id/fail"
+			android:text="fail"
+			/>
+	</LinearLayout>
+
 </RelativeLayout>

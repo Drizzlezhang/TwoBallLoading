@@ -2,7 +2,6 @@ package com.drizzle.loadingview;
 
 import android.content.Context;
 
-
 public class DensityUtils {
 
 	/**

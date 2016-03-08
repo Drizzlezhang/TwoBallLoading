@@ -205,7 +205,7 @@ public class TwoBallLoadingView extends View {
 	 * 画对号和错号
 	 */
 	private void drawRightOrWrong(Canvas canvas, int progress, boolean right) {
-		mROWPaint.setAlpha(progress * 255 / 100);
+		mPath.reset();
 		mROWPaint.setStrokeWidth(mChildBallRadius / 3);
 		int cx = (int) (mParentBallRadius * 0.75 / 1.414);
 		int centerX = (getMeasuredWidth() + getPaddingLeft() - getPaddingRight()) / 2;
@@ -237,8 +237,8 @@ public class TwoBallLoadingView extends View {
 				mPath.moveTo(centerX - cx, centerY - cx);
 				mPath.lineTo(centerX - cx + lineLength, centerY - cx + lineLength);
 			}
-		} canvas.drawPath(mPath, mROWPaint);
-		mPath.reset();
+		}
+		canvas.drawPath(mPath, mROWPaint);
 	}
 
 	private void setProgress(int progress) {
